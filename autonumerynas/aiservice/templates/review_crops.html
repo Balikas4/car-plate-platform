@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review and Edit License Plates</title>
+    <style>
+        .container { display: flex; flex-direction: column; align-items: center; }
+        .crop-row { display: flex; margin: 10px 0; align-items: center; }
+        .crop-row img { max-width: 150px; margin-right: 10px; }
+        input { padding: 5px; font-size: 16px; }
+        button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>Review Cropped Images</h1>
+    <form method="POST" action="{% url 'save_license_plates' %}">
+        {% csrf_token %}
+        {% for crop, result in crops_and_results %}
+            <div>
+                <img src="{{ crop }}" alt="Cropped Image" style="width: 200px; height: auto;">
+                <input type="text" name="plates" value="{{ result }}" placeholder="Edit license plate">
+            </div>
+        {% endfor %}
+        <button type="submit">Save Plates</button>
+    </form>
+</body>
+</html>

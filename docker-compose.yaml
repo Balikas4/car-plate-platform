@@ -1,0 +1,37 @@
+services:
+  ai-service:
+    build:
+      context: ./ai
+    container_name: ai-service
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./ai:/app
+    restart: always
+
+  django-app:
+    build:
+      context: ./autonumerynas
+    container_name: django-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./autonumerynas:/app
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: autonumerynas
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

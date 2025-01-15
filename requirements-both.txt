@@ -1,0 +1,7 @@
+fastapi
+requests
+onnxruntime
+easyocr
+Django
+uvicorn
+python-multipart
