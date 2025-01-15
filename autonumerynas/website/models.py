@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 import re
+import uuid
+from django.contrib.auth.models import User
+
 
 class PlateLT(models.Model):
     PLATE_TYPES = [
@@ -11,7 +14,7 @@ class PlateLT(models.Model):
         ('4wheel', '4-Wheel'),
     ]
 
-    id = models.UUIDField(primary_key=True, editable=False, unique=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     plate_number = models.CharField(max_length=10, db_index=True)
     plate_type = models.CharField(max_length=15, choices=PLATE_TYPES)
     image = models.ImageField(upload_to='plates/', null=True, blank=True)
@@ -21,7 +24,7 @@ class PlateLT(models.Model):
         ('Sold', 'Sold'),
         ('Reserved', 'Reserved'),
     ])
-    listed_by = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    listed_by = models.ForeignKey(User, on_delete=models.CASCADE)  # Ensure this is correct
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

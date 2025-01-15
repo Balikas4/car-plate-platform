@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Car Plate Trading Platform</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/parduoti-numerius/">Sell License Plates</a></li>
+        </ul>
+    </nav>
+    <main>
+        <p>Find and sell unique license plates easily!</p>
+        {% for plate in plates %}
+        <ul>
+            <li>Plate Number: {{ plate.plate_number }}</li>
+            <li>Plate Type: {{ plate.get_plate_type_display }}</li> <!-- This will display the human-readable plate type -->
+            <li>Price: {{ plate.price }}</li>
+            <li>Status: {{ plate.status }}</li>
+            <li>Listed by: {{ plate.listed_by.username }}</li> <!-- Display the username of the user who listed it -->
+        </ul>
+        {% empty %}
+        <p>No license plates found.</p>
+        {% endfor %}
+    </main>
+</body>
+</html>
