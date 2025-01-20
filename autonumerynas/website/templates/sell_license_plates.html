@@ -16,5 +16,13 @@
             <li><a href="/ai-service/upload/">Upload AI License Plates</a></li>
         </ul>
     </nav>
+    <div class="container mt-4">
+        <h2>Sell Your License Plate</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">List Plate</button>
+        </form>
+    </div>
 </body>
 </html>

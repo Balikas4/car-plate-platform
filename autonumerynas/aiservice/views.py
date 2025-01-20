@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django import forms
 import requests
@@ -79,7 +79,7 @@ def save_license_plates(request):
         return JsonResponse({
             "message": "License plates saved successfully!",
             "saved_plates": saved_plates
-        })
+        }), redirect ('home')
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
