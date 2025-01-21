@@ -25,7 +25,8 @@ Thumbs.db
 .idea/
 *.iml
 
-# database
-db.sqlite3
+# Database
+autonumerynas/db.sqlite3
 
+# AI data
 autonumerynas/tmp/

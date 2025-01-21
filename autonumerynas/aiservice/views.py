@@ -62,9 +62,7 @@ def save_license_plates(request):
         plate_types = request.POST.getlist('plate_types')  # Corresponding types of plates
         prices = request.POST.getlist('prices')  # List of prices
 
-        saved_plates = []
         for plate, plate_type, price in zip(plates, plate_types, prices):
-            # Check if the user is logged in
             if request.user.is_authenticated:
                 if not PlateLT.objects.filter(plate_number=plate).exists():
                     license_plate = PlateLT(
@@ -74,12 +72,8 @@ def save_license_plates(request):
                         listed_by=request.user,  # Associate the current user as the owner of the listing
                     )
                     license_plate.save()
-                    saved_plates.append(license_plate.plate_number)
 
-        return JsonResponse({
-            "message": "License plates saved successfully!",
-            "saved_plates": saved_plates
-        }), redirect ('home')
+        return redirect('home')
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
