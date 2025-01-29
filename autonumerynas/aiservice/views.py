@@ -46,7 +46,10 @@ def upload_image(request):
                 data = response.json()
                 crops = data.get("cropped_images", [])
                 ocr_results = data.get("ocr_results", [])
-                crops_and_results = zip(crops, ocr_results)
+                plate_types = data.get("plate_types", [])  # Get plate_types from the response
+
+                # Zip crops, ocr_results, and plate_types together
+                crops_and_results = zip(crops, ocr_results, plate_types)
 
                 return render(request, 'review_crops.html', {
                     "crops_and_results": crops_and_results
@@ -76,4 +79,3 @@ def save_license_plates(request):
         return redirect('home')
 
     return JsonResponse({"error": "Invalid request"}, status=400)
-

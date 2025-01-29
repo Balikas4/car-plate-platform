@@ -32,11 +32,11 @@ class PlateLTForm(forms.ModelForm):
         plate_type = self.cleaned_data.get('plate_type')
 
         format_patterns = {
-            'car': r'^[A-Z]{3} \d{3}$',             # ABC 123
-            'trailer': r'^[A-Z]{2} \d{3}$',         # AB 123
-            'moto': r'^\d{3} [A-Z]{2}$',            # 123 AB
-            'scooter': r'^\d{2} [A-Z]{3}$',         # 12 ABC
-            '4wheel': r'^[A-Z]{2} \d{2}$',          # AB 12
+            'car': r'^[A-Z]{3}\d{3}$',             # ABC 123
+            'trailer': r'^[A-Z]{2}\d{3}$',         # AB 123
+            'moto': r'^\d{3}[A-Z]{2}$',            # 123 AB
+            'scooter': r'^\d{2}[A-Z]{3}$',         # 12 ABC
+            '4wheel': r'^[A-Z]{2}\d{2}$',          # AB 12
         }
 
         if plate_type in format_patterns:

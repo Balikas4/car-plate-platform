@@ -10,6 +10,7 @@ import io
 from PIL import Image
 import numpy as np
 from fastapi.staticfiles import StaticFiles
+import re
 
 app = FastAPI()
 
@@ -86,7 +87,32 @@ def crop_detections(image, detections, output_dir):
         cropped_images.append(cropped_path)
     return cropped_images
 
-# Endpoint for image upload and OCR processing
+# Function to clean the OCR'd license plate
+def clean_license_plate(text):
+    # Remove the "LT" combo explicitly
+    text = text.replace("LT", "")
+    
+    # Remove any remaining non-alphanumeric characters
+    cleaned_text = re.sub(r'[^A-Z0-9]', '', text)
+    return cleaned_text
+
+# Function to determine the license plate type
+def determine_license_plate_type(plate_number):
+    plate_patterns = {
+        "Car": r"^[A-Z]{3}\d{3}$",       # ABC 123
+        "Trailer": r"^[A-Z]{2}\d{3}$",   # AB 123
+        "Moto": r"^\d{3}[A-Z]{2}$",      # 123 AB
+        "Scooter": r"^\d{2}[A-Z]{3}$",   # 12 ABC
+        "4-Wheel": r"^[A-Z]{2}\d{2}$"   # AB 12
+    }
+    
+    for plate_type, pattern in plate_patterns.items():
+        if re.match(pattern, plate_number):
+            return plate_type
+    
+    return "Unknown"
+
+# Modify the process_image endpoint to include cleaning and type determination
 @app.post("/process-image/")
 async def process_image(file: UploadFile = File(...)):
     try:
@@ -112,10 +138,20 @@ async def process_image(file: UploadFile = File(...)):
         cropped_images = crop_detections(original_image, detections, output_dir)
         ocr_results = perform_ocr(cropped_images)
 
+        # Clean OCR results and determine license plate type
+        cleaned_plates = []
+        plate_types = []
+        for ocr_text in ocr_results:
+            cleaned_plate = clean_license_plate(ocr_text)
+            plate_type = determine_license_plate_type(cleaned_plate)
+            cleaned_plates.append(cleaned_plate)
+            plate_types.append(plate_type)
+
         # Return results
         response_data = {
             "cropped_images": [f"http://localhost:8001/crops/{os.path.basename(path)}" for path in cropped_images],
-            "ocr_results": ocr_results
+            "ocr_results": cleaned_plates,
+            "plate_types": plate_types
         }
         return JSONResponse(content=jsonable_encoder(response_data))
 
